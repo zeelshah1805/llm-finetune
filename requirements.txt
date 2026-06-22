@@ -1,0 +1,20 @@
+# Core ML / fine-tuning stack (install on Colab/Kaggle T4 for training)
+# Pinned to versions known to work together on a free T4.
+transformers==4.44.2
+peft==0.12.0
+trl==0.9.6
+datasets==2.21.0
+accelerate==0.33.0
+bitsandbytes==0.43.3          # 4-bit quantization (CUDA only; skip on CPU/Windows)
+sentencepiece==0.2.0
+safetensors>=0.4.3
+
+# Eval + utilities (these run fine locally on CPU/Windows, no GPU needed)
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+tqdm>=4.66
+huggingface_hub>=0.24
+
+# Optional: LLM-as-judge via a local Ollama server (no API key). Used only if available.
+requests>=2.31

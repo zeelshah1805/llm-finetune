@@ -1,0 +1,12 @@
+# Normalize line endings: text files use LF in the repo.
+* text=auto eol=lf
+
+# Treat notebooks and data as text but don't munge them in diffs unnecessarily.
+*.ipynb text eol=lf
+*.jsonl text eol=lf
+
+# Binary
+*.png binary
+*.safetensors binary
+*.bin binary
+*.gguf binary

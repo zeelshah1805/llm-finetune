@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Model artifacts (large; push adapters to HF Hub instead of committing)
+adapters/
+merged_model/
+*.safetensors
+*.bin
+*.gguf
+checkpoints/
+outputs/
+
+# Eval outputs that are regenerated (keep results/comparison.md, ignore raw dumps)
+results/raw/
+results/charts/*.png
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Keep the frozen dataset splits tracked — do NOT ignore data/*.jsonl

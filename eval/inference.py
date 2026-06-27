@@ -19,7 +19,7 @@ from schema import build_messages
 
 @dataclass
 class GenConfig:
-    max_new_tokens: int = 512
+    max_new_tokens: int = 384     # gold JSON fits well under this; caps base-model rambling
     temperature: float = 0.0      # greedy -> deterministic eval
     do_sample: bool = False
 

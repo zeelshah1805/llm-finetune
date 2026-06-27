@@ -78,11 +78,13 @@ def score_predictions(rows: list[dict]) -> dict:
 # ---------------------------------------------------------------------------
 
 
-def run_model(label: str, base: str, adapter, test: list[dict], load_4bit: bool) -> list[dict]:
-    from eval.inference import load_parser  # lazy: heavy deps
+def run_model(label: str, base: str, adapter, test: list[dict], load_4bit: bool,
+              max_new_tokens: int = 384) -> list[dict]:
+    from eval.inference import GenConfig, load_parser  # lazy: heavy deps
 
     print(f"[{label}] loading base={base} adapter={adapter} 4bit={load_4bit}")
-    parser = load_parser(base, adapter_path=adapter, load_4bit=load_4bit)
+    parser = load_parser(base, adapter_path=adapter, load_4bit=load_4bit,
+                         gen=GenConfig(max_new_tokens=max_new_tokens))
 
     rows = []
     for i, ex in enumerate(test, 1):
@@ -308,6 +310,10 @@ def main() -> None:
                     help="add a local Ollama LLM-as-judge score (secondary signal)")
     ap.add_argument("--judge-model", default=None,
                     help="Ollama model for the judge (default: llama3.1:8b)")
+    ap.add_argument("--limit", type=int, default=None,
+                    help="evaluate only the first N test examples (quick smoke test)")
+    ap.add_argument("--max-new-tokens", type=int, default=384,
+                    help="generation cap per example (default 384)")
     args = ap.parse_args()
 
     os.makedirs(RESULTS, exist_ok=True)
@@ -326,11 +332,15 @@ def main() -> None:
 
     elif args.base:
         test = load_jsonl(args.test)
+        if args.limit:
+            test = test[:args.limit]
+            print(f"(smoke test: evaluating only {len(test)} examples)")
         pred_rows["Base (Qwen2.5-3B)"] = run_model(
-            "base", args.base, None, test, not args.no_4bit)
+            "base", args.base, None, test, not args.no_4bit, args.max_new_tokens)
         if args.adapter:
             pred_rows["Fine-tuned (QLoRA)"] = run_model(
-                "finetuned", args.base, args.adapter, test, not args.no_4bit)
+                "finetuned", args.base, args.adapter, test, not args.no_4bit,
+                args.max_new_tokens)
     else:
         ap.error("choose a mode: --demo, --from-predictions, or --base [--adapter]")
 

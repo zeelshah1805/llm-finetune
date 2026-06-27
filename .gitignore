@@ -16,9 +16,9 @@ merged_model/
 checkpoints/
 outputs/
 
-# Eval outputs that are regenerated (keep results/comparison.md, ignore raw dumps)
+# Eval outputs: ignore bulky raw prediction dumps, but TRACK the comparison
+# table + charts + loss curve — they're the portfolio artifacts shown in the README.
 results/raw/
-results/charts/*.png
 
 # OS / editor
 .DS_Store
